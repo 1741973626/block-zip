@@ -1,0 +1,19 @@
+pluginManagement {
+	repositories {
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
+
+plugins {
+	// 让 Gradle 能自动找到（必要时下载）JDK 25。
+	// 没有它的话，用 Java 21 的 IDE 同步工程会在 Loom 插件这一步直接失败。
+	id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+// Should match your modid
+rootProject.name = 'block_zip'

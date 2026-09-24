@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "block_zip",
+	"version": "${version}",
+	"name": "Block_zip",
+	"description": "把方块变种（半砖、楼梯、氧化/打蜡等随时间变化的状态）聚合成一个方块集合。选中方块时按下波浪键，即可在物品栏旁竖向展开该方块的全部变种，点击或滚轮切换，检索更快、更美观。",
+	"authors": [
+		"z1741"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/block_zip/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"com.blockzip.BlockZip"
+		],
+		"client": [
+			"com.blockzip.client.BlockZipClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "block_zip.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
