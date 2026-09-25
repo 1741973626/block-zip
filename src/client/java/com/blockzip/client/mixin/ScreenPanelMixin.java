@@ -30,7 +30,15 @@ public abstract class ScreenPanelMixin {
 	private void blockzip$renderPanelOnTop(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo callbackInfo) {
 		// 只有容器界面（背包 / 创造物品栏 / 各种箱子）才需要这条折叠栏
 		if ((Object) this instanceof AbstractContainerScreen<?> containerScreen) {
+			// 关键：1.21.1 的 GuiGraphics 是按 RenderType 排队、由 flush()/endBatch() 统一提交的，
+			// 提交顺序**不按画图顺序**（BufferSource 按 RenderType 分组）。所以即使我在最后画，
+			// 面板底（GUI 类型）也可能被先入队的格子物品（item 类型）盖住 —— 在用户装着
+			// sodium/iris/axiom/owo 等模组的实例里就会这样。
+			// 解法：画之前先 flush（把原版已入队的内容，包括物品，真正画出去），
+			//       画完再 flush（把面板自己的内容立刻画出去），前后各一次。
+			graphics.flush();
 			VariantPanel.get().renderInScreen(containerScreen, graphics, mouseX, mouseY);
+			graphics.flush();
 		}
 	}
 }
