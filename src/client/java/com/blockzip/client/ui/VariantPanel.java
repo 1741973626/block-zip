@@ -49,8 +49,15 @@ public final class VariantPanel {
 	private static final int UNAVAILABLE = 0x70101010;
 
 	private static final ResourceLocation SLOT_SPRITE = ResourceLocation.withDefaultNamespace("container/slot");
-	private static final ResourceLocation SLOT_HIGHLIGHT_BACK = ResourceLocation.withDefaultNamespace("container/slot_highlight_back");
-	private static final ResourceLocation SLOT_HIGHLIGHT_FRONT = ResourceLocation.withDefaultNamespace("container/slot_highlight_front");
+	/**
+	 * 槽位高亮的颜色。
+	 *
+	 * <p>注意：`container/slot_highlight_back` / `container/slot_highlight_front` 这两个 sprite 是后期版本
+	 * 才加进原版的，**1.21.1 的客户端里没有**（照抄 26.3 的 id 会渲染成洋红色缺失贴图）。
+	 * 1.21.1 官方自己在 {@code AbstractContainerScreen#renderSlotHighlight} 里用的是半透明白块，这里照做。</p>
+	 */
+	private static final int SLOT_HIGHLIGHT_BACK_COLOR = 0x60FFFFFF;
+	private static final int SLOT_HIGHLIGHT_FRONT_COLOR = 0x80FFFFFF;
 	/** 原版快捷栏选中格的加粗外框（1px 白亮边 + 2px 深描边），24×23。 */
 	private static final ResourceLocation HOTBAR_SELECTION_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar_selection");
 	private static final int FRAME_W = 24;
@@ -575,12 +582,13 @@ public final class VariantPanel {
 			graphics.drawString(font, position, this.x + this.width - 5 - font.width(position), this.y + 4, TITLE_COLOR, false);
 		}
 
-		// 选中项：原版“槽位背面高亮”，画在物品下面
+		// 选中项高亮：画在物品下面（1.21.1 用半透明白块，见上面的常量注释）
 		int selectedRow = this.selected - this.scroll;
 		boolean selectedVisible = selectedRow >= 0 && selectedRow < cells;
 
 		if (selectedVisible) {
-			graphics.blitSprite(SLOT_HIGHLIGHT_BACK, cellX - 4, cellTop + selectedRow * CELL - 4, 24, 24);
+			int highlightTop = cellTop + selectedRow * CELL;
+			graphics.fill(cellX - 4, highlightTop - 4, cellX + CELL + 4, highlightTop + CELL + 4, SLOT_HIGHLIGHT_BACK_COLOR);
 		}
 
 		// 第一遍：所有槽底
@@ -625,11 +633,12 @@ public final class VariantPanel {
 			}
 		}
 
-		// 鼠标悬停：原版“槽位正面高亮”，画在物品上面
+		// 鼠标悬停：高亮画在物品上面
 		int hoverRow = rowAt(mouseY);
 
 		if (hoverRow >= 0 && mouseX >= cellX && mouseX < cellX + CELL) {
-			graphics.blitSprite(SLOT_HIGHLIGHT_FRONT, cellX - 4, cellTop + hoverRow * CELL - 4, 24, 24);
+			int highlightTop = cellTop + hoverRow * CELL;
+			graphics.fill(cellX - 4, highlightTop - 4, cellX + CELL + 4, highlightTop + CELL + 4, SLOT_HIGHLIGHT_FRONT_COLOR);
 		}
 
 		// 悬停/选中那一项的名字，浮在栏旁边
