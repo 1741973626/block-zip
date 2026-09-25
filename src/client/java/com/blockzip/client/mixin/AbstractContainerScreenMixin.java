@@ -29,6 +29,19 @@ public abstract class AbstractContainerScreenMixin {
 	// 注在这里的 RETURN 也压不住它们。面板改由 ScreenPanelMixin 注入
 	// Screen#renderWithTooltip 的 RETURN（屏幕渲染最外层）来画。
 
+	/**
+	 * 面板打开时，让原版的格子 tooltip 让位。
+	 *
+	 * <p>面板盖住了鼠标下面的格子，但原版照样会为那个格子画 tooltip（内容还会带上创造模式分类名），
+	 * 于是它浮在面板上、和面板自己显示的物品名打架。面板展开期间直接取消掉即可。</p>
+	 */
+	@Inject(method = "renderTooltip", at = @At("HEAD"), cancellable = true)
+	private void blockzip$hideVanillaTooltip(GuiGraphics graphics, int mouseX, int mouseY, CallbackInfo callbackInfo) {
+		if (VariantPanel.get().isOpen()) {
+			callbackInfo.cancel();
+		}
+	}
+
 	@Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
 	private void blockzip$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> callbackInfo) {
 		VariantPanel.debug("mouseClicked button=" + button
