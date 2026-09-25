@@ -1,0 +1,7 @@
+{
+	"key.categories.block_zip": "Block_zip",
+	"key.block_zip.open_variants": "Open block variant list",
+	"message.block_zip.missing": "No %s in your inventory",
+	"hint.block_zip.world": "Scroll to choose · release to take",
+	"hint.block_zip.screen": "Scroll to choose · release to take · click to grab"
+}

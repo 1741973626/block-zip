@@ -1,0 +1,17 @@
+{
+	"required": true,
+	"package": "com.blockzip.client.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"AbstractContainerScreenAccessor",
+		"AbstractContainerScreenMixin",
+		"CreativeModeInventoryScreenMixin",
+		"MouseHandlerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

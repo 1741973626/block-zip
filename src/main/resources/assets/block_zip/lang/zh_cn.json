@@ -1,0 +1,7 @@
+{
+	"key.categories.block_zip": "Block_zip",
+	"key.block_zip.open_variants": "展开方块变种列表",
+	"message.block_zip.missing": "背包里没有 %s",
+	"hint.block_zip.world": "滚轮选择 · 松开按键取出",
+	"hint.block_zip.screen": "滚轮选择 · 松开取出 · 点击贴鼠标"
+}

@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "block_zip",
+	"version": "${version}",
+	"name": "Block_zip",
+	"description": "把方块变种（半砖 / 楼梯 / 铜的氧化打蜡状态）收进一条竖向折叠栏：按住 ` 展开、滚轮选择、松开取出。纯客户端。",
+	"authors": [
+		"1741973626"
+	],
+	"contact": {
+		"homepage": "https://github.com/1741973626/block-zip",
+		"sources": "https://github.com/1741973626/block-zip"
+	},
+	"license": "MIT",
+	"icon": "assets/block_zip/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"com.blockzip.BlockZip"
+		],
+		"client": [
+			"com.blockzip.client.BlockZipClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "block_zip.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
