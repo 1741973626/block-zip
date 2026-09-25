@@ -6,7 +6,8 @@
 		"AbstractContainerScreenAccessor",
 		"AbstractContainerScreenMixin",
 		"CreativeModeInventoryScreenMixin",
-		"MouseHandlerMixin"
+		"MouseHandlerMixin",
+		"ScreenPanelMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

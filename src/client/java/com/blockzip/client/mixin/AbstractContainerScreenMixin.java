@@ -25,18 +25,9 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
  */
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin {
-	/**
-	 * 面板要画在**整个容器界面渲染完之后**。
-	 *
-	 * <p>不能用 Fabric 的 {@code ScreenEvents.afterRender}：它在 {@code Screen#render} 那一层触发，
-	 * 而 {@code AbstractContainerScreen#render} 是先调 {@code super.render}、**之后**才画槽位/物品/文字，
-	 * 于是面板被画在了物品下面（表现为"物品透过面板"、原版 tooltip 压在面板上）。
-	 * 这里直接在 {@code AbstractContainerScreen#render} 的 RETURN 处画，层级就对了。</p>
-	 */
-	@Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At("RETURN"))
-	private void blockzip$renderPanel(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo callbackInfo) {
-		VariantPanel.get().renderInScreen((AbstractContainerScreen<?>) (Object) this, graphics, mouseX, mouseY);
-	}
+	// 绘制**不在这里**：容器界面（尤其创造物品栏）会在 super.render 之后继续画分类栏/物品/tooltip，
+	// 注在这里的 RETURN 也压不住它们。面板改由 ScreenPanelMixin 注入
+	// Screen#renderWithTooltip 的 RETURN（屏幕渲染最外层）来画。
 
 	@Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
 	private void blockzip$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> callbackInfo) {
