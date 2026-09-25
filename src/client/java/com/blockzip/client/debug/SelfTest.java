@@ -252,20 +252,26 @@ public final class SelfTest {
 			return;
 		}
 
-		// 把鼠标挪回手拿的那一格，后面继续测正常展开
+		// 找一个**真的装着有变种方块**的格子，不再假设快捷栏里是铜（存档里的物品会漂移）
 		Slot target = null;
-		int hotbar = minecraft.player.getInventory().selected;
 
 		for (Slot slot : containerScreen.getMenu().slots) {
-			if (slot.container == minecraft.player.getInventory() && slot.getContainerSlot() == hotbar) {
+			if (slot.container == minecraft.player.getInventory() && slot.hasItem()
+					&& VariantIndex.variantsOf(slot.getItem()).size() > 1) {
 				target = slot;
 				break;
 			}
 		}
 
-		if (target != null) {
-			moveCursor(minecraft, accessor.getLeftPos() + target.x + 8, accessor.getTopPos() + target.y + 8);
+		if (target == null) {
+			log("screen mode: 背包里没有带变种的方块，跳过这一段");
+			next(30);
+			return;
 		}
+
+		log("screen mode: 把鼠标移到 containerSlot=" + target.getContainerSlot()
+				+ " 的 " + target.getItem().getItem());
+		moveCursor(minecraft, accessor.getLeftPos() + target.x + 8, accessor.getTopPos() + target.y + 8);
 
 		next(30);
 	}
@@ -281,8 +287,11 @@ public final class SelfTest {
 			AbstractContainerScreenAccessor accessor = (AbstractContainerScreenAccessor) containerScreen;
 			// 直接喂一个波浪键事件，走的就是玩家按键时的那条逻辑
 			boolean handled = VariantPanel.get().onKeyPressed(containerScreen, InputConstants.KEY_GRAVE, GRAVE_SCANCODE);
+			Slot hoveredNow = accessor.getHoveredSlot();
+			String hoveredName = hoveredNow != null && hoveredNow.hasItem()
+					? String.valueOf(hoveredNow.getItem().getItem()) : "<none>";
 			log("screen initial selected = " + VariantPanel.get().selectedItemName()
-					+ " (expect 鼠标下那个 = weathered_copper)");
+					+ " (鼠标下那一格 = " + hoveredName + "，两者应一致)");
 			// 再喂一次一模一样的事件 = 模拟长按自动重复，面板不应该被关掉
 			boolean repeatHandled = VariantPanel.get().onKeyPressed(containerScreen, InputConstants.KEY_GRAVE, GRAVE_SCANCODE);
 			boolean stillOpen = VariantPanel.get().isOpen();

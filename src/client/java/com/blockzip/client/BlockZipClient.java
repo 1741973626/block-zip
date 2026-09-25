@@ -66,8 +66,10 @@ public class BlockZipClient implements ClientModInitializer {
 			// 1.21.1 的 AbstractContainerScreen 覆写了 mouseClicked/mouseReleased，
 			// 取消 super 的返回值拦不住子类自己的处理。点击/松开改用 AbstractContainerScreenMixin，
 			// 滚轮改用 MouseHandlerMixin（1.21.1 的 AbstractContainerScreen 根本没有 mouseScrolled 覆写）。
-			ScreenEvents.afterRender(screen).register(
-					(s, graphics, mouseX, mouseY, tickDelta) -> VariantPanel.get().renderInScreen(containerScreen, graphics, mouseX, mouseY));
+			// 绘制也不在这里挂：Fabric 的 ScreenEvents.afterRender 在 Screen#render 那一层触发，
+			// 而 AbstractContainerScreen 是先 super.render、之后才画槽位与物品，
+			// 面板会被压在物品下面（物品透过面板、tooltip 压在上面）。
+			// 改由 AbstractContainerScreenMixin 在 AbstractContainerScreen#render 的 RETURN 处绘制。
 			ScreenEvents.remove(screen).register(s -> VariantPanel.get().onScreenClosed());
 		});
 
